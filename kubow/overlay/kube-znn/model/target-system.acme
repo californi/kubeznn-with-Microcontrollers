@@ -7,296 +7,63 @@ System KubeZnnSystem : KubernetesFam = new KubernetesFam extended with {
   */
 
     // -----------------------------------------------------
-    // Components for configurations
+    // Components for fidelity
     // -----------------------------------------------------
 
-    //Component Configurations service
-    Component configurationsS : ServiceT = new ServiceT extended with {
+    //Component fidelity service
+    Component fidelityS : ServiceT = new ServiceT extended with {
         Port apiPort  = { }
 
-        // Just an example of properties
-        Property name = "configurations";
-        Property expectedSlo = 0.95;
-        Property desiredSlo = 0.98;
+        Property name = "fidelity";
     }
 
-    //Component Configurations Deployment
-    Component configurationsD : DeploymentT = new DeploymentT extended with {
+    //Component fidelity Deployment
+    Component fidelityD : DeploymentT = new DeploymentT extended with {
         Port apiPort  = { }
-        Port monitorDynamicMonitoringConfigurationsPort  = { }
-        Port monitorProactiveMonitingConfigurationsPort  = { }
-        Port analyserSelfdiagnosisConfigurationsPort  = { }
-        Port analyserReliabilityEstimationConfigurationsPort  = { }
+        Port fidelityKubeznnPort  = { }
     
         Property namespace = "default";
-        Property hasAlternativeImages = true;
-        Property alternativeImages = <"californibrs/configurations-configuration1","californibrs/configurations-configuration2","californibrs/configurations-configuration3">;
-        Property name = "configurations";
-
-        Property replicasHigh = 0;
-        Property replicasLow = 0;
-        Property stability = 0;
-
+        Property name = "fidelity";
     }
 
-    //Connector responsible for connecting the Deployment (configurationsD) and the service (configurationsS)
-    Connector configurationsSC = new LabelSelectorConnectorT extended with {
-        Property selectors = <[name : string = "app";value : string = "configurations";]>;
+    //Connector responsible for connecting the Deployment (fidelityD) and the service (fidelityS)
+    Connector fidelitySC = new LabelSelectorConnectorT extended with {
+        Property selectors = <[name : string = "app";value : string = "fidelity";]>;
     }
 
-    //Performing the kubernetes connection between Deployment (configurationsD) and the service (configurationsS)
-    Attachment configurationsS.apiPort to configurationsSC.callee;
-    Attachment configurationsD.apiPort to configurationsSC.caller;  
+    //Performing the kubernetes connection between Deployment (fidelityD) and the service (fidelityS)
+    Attachment fidelityS.apiPort to fidelitySC.callee;
+    Attachment fidelityD.apiPort to fidelitySC.caller;  
 
 
-  /*
-    Controller architecture - Microcontrollers
-  */
+    // -----------------------------------------------------
+    // Components for scalability
+    // -----------------------------------------------------
+
+    //Component scalability service
+    Component scalabilityS : ServiceT = new ServiceT extended with {
+        Port apiPort  = { }
+
+        Property name = "scalability";
+    }
+
+    //Component scalability Deployment
+    Component scalabilityD : DeploymentT = new DeploymentT extended with {
+        Port apiPort  = { }
+        Port scalabilityKubeznnPort  = { }
     
-        // -----------------------------------------------------
-    // Components for Monitor-dynamicmonitoring 
-    // -----------------------------------------------------
-
-    //Component Monitor-dynamicmonitoring service
-    Component monitorDynamicMonitoringS : ServiceT = new ServiceT extended with {
-        Port apiPort  = { }
-        Port monitorDynamicMonitoringConfigurationsPort  = { }
-        Port monitorDynamicMonitoringAnalyserSelfdiagnosisPort  = { }
-        Port monitorDynamicMonitoringAnalyserReliabilityEstimationPort  = { }
-
-        // Just an example of properties
-        Property name = "monitorDynamicMonitoring";
-        Property expectedSlo = 0.95;
-        Property desiredSlo = 0.98;
-    }
-
-    //Component monitorDynamicmonitoring Deployment
-    Component monitorDynamicMonitoringD : DeploymentT = new DeploymentT extended with {
-        Port apiPort  = { }
-        Port monitorDynamicMonitoringConfigurationsPort  = { }
-        Port monitorDynamicMonitoringAnalyserSelfdiagnosisPort  = { }
-        Port monitorDynamicMonitoringAnalyserReliabilityEstimationPort  = { }
-
-        Property namespace = "default";    
-        Property name = "monitorDynamicMonitoring";
-
-        Property replicasHigh = 0;
-        Property replicasLow = 0;
-        Property stability = 0;
-
-    }
-
-    //Connector responsible for connecting the Deployment (monitorDynamicmonitoringD) and the service (monitorDynamicMonitoringS)
-    Connector monitorDynamicMonitoringSC = new LabelSelectorConnectorT extended with {
-        Property selectors = <[name : string = "app";value : string = "monitorDynamicMonitoring";]>;
-    }
-
-    //Performing the kubernetes connection between Deployment (monitorDynamicMonitoringD) and the service (monitorDynamicMonitoringS)
-    Attachment monitorDynamicMonitoringS.apiPort to monitorDynamicMonitoringSC.callee;
-    Attachment monitorDynamicmonitoringD.apiPort to monitorDynamicMonitoringSC.caller; 
-
-
-    // -----------------------------------------------------
-    // Components for Monitor-proactivemonitoring 
-    // -----------------------------------------------------
-
-    //Component Monitor-proactivemonitoring service
-    Component monitorProactiveMonitoringS : ServiceT = new ServiceT extended with {
-        Port apiPort  = { }
-        Port monitorProactiveMonitoringConfigurationsPort  = { }
-        Port monitorProactiveMonitoringAnalyserSelfdiagnosisPort  = { }
-        Port monitorProactiveMonitoringAnalyserReliabilityEstimationPort  = { }
-
-        // Just an example of properties
-        Property name = "monitorProactiveMonitoring";
-        Property expectedSlo = 0.95;
-        Property desiredSlo = 0.98;
-    }
-
-    //Component monitorProactiveMonitoring Deployment
-    Component monitorProactiveMonitoringD : DeploymentT = new DeploymentT extended with {
-        Port apiPort  = { }
-        Port monitorProactiveMonitoringConfigurationsPort  = { }
-        Port monitorProactiveMonitoringAnalyserSelfdiagnosisPort  = { }
-        Port monitorProactiveMonitoringAnalyserReliabilityEstimationPort  = { }
-        
-        Property namespace = "default";    
-        Property name = "monitorProactiveMonitoring";
-
-        Property replicasHigh = 0;
-        Property replicasLow = 0;
-        Property stability = 0;
-
-    }
-
-    //Connector responsible for connecting the Deployment (monitorProactiveMonitoringD) and the service (monitorProactiveMonitoringS)
-    Connector monitorProactiveMonitoringSC = new LabelSelectorConnectorT extended with {
-        Property selectors = <[name : string = "app";value : string = "monitorProactiveMonitoring";]>;
-    }    
-
-    //Performing the kubernetes connection between Deployment (monitorProactiveMonitoringD) and the service (monitorProactiveMonitoringS)
-    Attachment monitorProactiveMonitoringS.apiPort to monitorProactiveMonitoringSC.callee;
-    Attachment monitorProactiveMonitoringD.apiPort to monitorProactiveMonitoringSC.caller; 
-
-
-
-    // -----------------------------------------------------
-    // Components for Analyser-selfdiagnosis 
-    // -----------------------------------------------------
-
-    //Component Analyser-selfdiagnosis service
-    Component analyserSelfdiagnosisS : ServiceT = new ServiceT extended with {
-        Port apiPort  = { }
-        Port analyserSelfdiagnosisConfigurationsPort  = { }
-        Port analyserSelfdiagnosisMonitorDynamicMonitoringPort  = { }
-        Port analyserSelfdiagnosisMonitorProactiveMonitoringPort  = { }
-
-        // Just an example of properties
-        Property name = "analyserSelfdiagnosis";
-        Property expectedSlo = 0.95;
-        Property desiredSlo = 0.98;
-    }
-
-    //Component analyserSelfdiagnosis Deployment
-    Component analyserSelfdiagnosisD : DeploymentT = new DeploymentT extended with {
-        Port apiPort  = { }
-        Port analyserSelfdiagnosisConfigurationsPort  = { }
-        Port analyserSelfdiagnosisMonitorDynamicMonitoringPort  = { }
-        Port analyserSelfdiagnosisMonitorProactiveMonitoringPort  = { }
-
-        Property namespace = "default";    
-        Property name = "analyserSelfdiagnosis";
-
-        Property replicasHigh = 0;
-        Property replicasLow = 0;
-        Property stability = 0;
-
-    }
-
-    //Connector responsible for connecting the Deployment (analyserSelfdiagnosisD) and the service (analyserSelfdiagnosisS)
-    Connector analyserSelfdiagnosisSC = new LabelSelectorConnectorT extended with {
-        Property selectors = <[name : string = "app";value : string = "analyserSelfdiagnosis";]>;
-    }
-
-    //Performing the kubernetes connection between Deployment (analyserSelfdiagnosisD) and the service (analyserSelfdiagnosisS)
-    Attachment analyserSelfdiagnosisS.apiPort to analyserSelfdiagnosisSC.callee;
-    Attachment analyserSelfdiagnosisD.apiPort to analyserSelfdiagnosisSC.caller; 
-
-
-// -----------------------------------------------------
-    // Components for Analyser-ReliabilityEstimation 
-    // -----------------------------------------------------
-
-    //Component Analyser-ReliabilityEstimation service
-    Component analyserReliabilityEstimationS : ServiceT = new ServiceT extended with {
-        Port apiPort  = { }
-        Port analyserReliabilityEstimationConfigurationsPort  = { }
-        Port analyserReliabilityEstimationMonitorDynamicMonitoringPort  = { }
-        Port analyserReliabilityEstimationMonitorProactiveMonitoringPort  = { }
-
-        // Just an example of properties
-        Property name = "analyserReliabilityEstimation";
-        Property expectedSlo = 0.95;
-        Property desiredSlo = 0.98;
-    }
-
-    //Component analyserReliabilityEstimation Deployment
-    Component analyserReliabilityEstimationD : DeploymentT = new DeploymentT extended with {
-        Port apiPort  = { }
-        Port analyserReliabilityEstimationConfigurationsPort  = { }
-        Port analyserReliabilityEstimationMonitorDynamicMonitoringPort  = { }
-        Port analyserReliabilityEstimationMonitorProactiveMonitoringPort  = { }
-
-        Property namespace = "default";    
-        Property name = "analyserReliabilityEstimation";
-
-        Property replicasHigh = 0;
-        Property replicasLow = 0;
-        Property stability = 0;
-
-    }
-
-    //Connector responsible for connecting the Deployment (analyserReliabilityEstimationD) and the service (analyserReliabilityEstimationS)
-    Connector analyserReliabilityEstimationSC = new LabelSelectorConnectorT extended with {
-        Property selectors = <[name : string = "app";value : string = "analyserReliabilityEstimation";]>;
-    }
-
-    //Performing the kubernetes connection between Deployment (analyserReliabilityEstimationD) and the service (analyserReliabilityEstimationS)
-    Attachment analyserReliabilityEstimationD.apiPort to analyserReliabilityEstimationSC.callee;
-    Attachment analyserReliabilityEstimationS.apiPort to analyserReliabilityEstimationSC.caller; 
-
-
-
-
-    // ------------------------------------------------------------------------
-    // Connecting a microcontroller (Monitor-dynamicmonitoring) to another (Analyser-selfdiagnosis)
-    // ------------------------------------------------------------------------
-
-    // Defining the connector
-    Connector monitorDynamicMonitoringAnalyserSelfdiagnosisConn  = new ServiceConnectorT extended with {
         Property namespace = "default";
-        Property name = "monitorDynamicMonitoringAnalyserSelfdiagnosisConn";
+        Property name = "scalability";
     }
 
-
-    // Connecting both of them
-    Attachment monitorDynamicMonitoringD.monitorDynamicMonitoringAnalyserSelfdiagnosisPort to monitorDynamicMonitoringAnalyserSelfdiagnosisConn.selector;
-    Attachment analyserSelfdiagnosisS.monitorDynamicMonitoringAnalyserSelfdiagnosisPort to monitorDynamicMonitoringAnalyserSelfdiagnosisConn.selectee;
-
-
-    // ------------------------------------------------------------------------
-    // Connecting a microcontroller (Monitor-dynamicmonitoring) to another (Analyser-ReliabilityEstimation)
-    // ------------------------------------------------------------------------
-
-    // Defining the connector
-    Connector monitorDynamicMonitoringAnalyserReliabilityEstimationConn  = new ServiceConnectorT extended with {
-        Property namespace = "default";
-        Property name = "monitorDynamicMonitoringAnalyserReliabilityEstimationConn";
+    //Connector responsible for connecting the Deployment (scalabilityS) and the service (scalabilityS)
+    Connector scalabilitySC = new LabelSelectorConnectorT extended with {
+        Property selectors = <[name : string = "app";value : string = "scalability";]>;
     }
 
-
-    // Connecting both of them
-    Attachment monitorDynamicMonitoringD.monitorDynamicMonitoringAnalyserReliabilityEstimationPort to monitorDynamicMonitoringAnalyserReliabilityEstimationConn.selector;
-    Attachment analyserReliabilityEstimationS.monitorDynamicMonitoringAnalyserReliabilityEstimationPort to monitorDynamicMonitoringAnalyserReliabilityEstimationConn.selectee;
-
-
-
-    // ------------------------------------------------------------------------
-    // Connecting a microcontroller (Monitor-proactivemonitoring) to another (Analyser-selfdiagnosis)
-    // ------------------------------------------------------------------------
-
-    // Defining the connector
-    Connector monitorProactiveMonitoringAnalyserSelfdiagnosisConn  = new ServiceConnectorT extended with {
-        Property namespace = "default";
-        Property name = "monitorProactiveMonitoringAnalyserSelfdiagnosisConn";
-    }
-
-
-    // Connecting both of them
-    Attachment monitorProactiveMonitoringD.monitorProactiveMonitoringAnalyserSelfdiagnosisPort to monitorProactiveMonitoringAnalyserSelfdiagnosisConn.selector;
-    Attachment analyserSelfdiagnosisS.monitorProactiveMonitoringAnalyserSelfdiagnosisPort to monitorProactiveMonitoringAnalyserSelfdiagnosisConn.selectee;
-
-
-    // ------------------------------------------------------------------------
-    // Connecting a microcontroller (Monitor-Proactivemonitoring) to another (Analyser-ReliabilityEstimation)
-    // ------------------------------------------------------------------------
-
-    // Defining the connector
-    Connector monitorProactiveMonitoringAnalyserReliabilityEstimationConn  = new ServiceConnectorT extended with {
-        Property namespace = "default";
-        Property name = "monitorProactiveMonitoringAnalyserReliabilityEstimationConn";
-    }
-
-
-    // Connecting both of them
-    Attachment monitorProactiveMonitoringD.monitorProactiveMonitoringAnalyserReliabilityEstimationPort to monitorProactiveMonitoringAnalyserReliabilityEstimationConn.selector;
-    Attachment analyserReliabilityEstimationS.monitorProactiveMonitoringAnalyserReliabilityEstimationPort to monitorProactiveMonitoringAnalyserReliabilityEstimationConn.selectee;
-
-
-// ------------------------------------------------------------------------------------------------------------
-// ------------------------------------------------------------------------------------------------------------
-// ------------------------------------------------------------------------------------------------------------
-// ------------------------------------------------------------------------------------------------------------
+    //Performing the kubernetes connection between Deployment (scalabilityD) and the service (scalabilityS)
+    Attachment scalabilityD.apiPort to scalabilitySC.callee;
+    Attachment scalabilityS.apiPort to scalabilitySC.caller;  
 
   /*
     Target System architecture - KubeZnn
